@@ -1,11 +1,11 @@
 [package]
-name = "brain-machine-bevy"
+name = "mechatrek-bevy"
 version = "0.0.1"
 edition = "2024"
 
 [dependencies]
 bevy = "0.16.1"
-log = "0.4.27"
+log = "0.4.29"
 
 [features]
 wayland = ["bevy/wayland"]
@@ -55,5 +55,5 @@ inherits = "release-lto"
 opt-level = "z"
 
 [lib]
-name = "brain_machine_bevy"
+name = "mechatrek_bevy"
 crate-type = ["lib", "cdylib"]

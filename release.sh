@@ -19,14 +19,14 @@ docker run \
 -v $PWD:/home/user/project \
 -v $HOME/.cargo/registry:/home/user/.cargo/registry \
 -v $HOME/.cargo/git:/home/user/.cargo/git \
-brain-machine-bevy-ubuntu:latest \
+mechatrek-bevy-ubuntu:latest \
 cargo build \
 --profile release-lto \
 --target x86_64-unknown-linux-gnu \
 --features log-max,wayland
 
-cp target/x86_64-unknown-linux-gnu/release-lto/brain-machine-bevy \
-dist/v0.0.1/brain-machine-bevy-linux-x86_64
+cp target/x86_64-unknown-linux-gnu/release-lto/mechatrek-bevy \
+dist/v0.0.1/mechatrek-bevy-linux-x86_64
 
 
 
@@ -41,14 +41,14 @@ docker run \
 -v $PWD:/home/user/project \
 -v $HOME/.cargo/registry:/home/user/.cargo/registry \
 -v $HOME/.cargo/git:/home/user/.cargo/git \
-brain-machine-bevy-debian:latest \
+mechatrek-bevy-debian:latest \
 cargo build \
 --profile release-lto \
 --target aarch64-unknown-linux-gnu \
 --features log-max,wayland
 
-cp target/aarch64-unknown-linux-gnu/release-lto/brain-machine-bevy \
-dist/v0.0.1/brain-machine-bevy-linux-aarch64
+cp target/aarch64-unknown-linux-gnu/release-lto/mechatrek-bevy \
+dist/v0.0.1/mechatrek-bevy-linux-aarch64
 
 
 
@@ -56,11 +56,11 @@ echo
 echo "WASM package (site)"
 echo
 
-rm -rf brain-machine-bevy-web/
+rm -rf mechatrek-bevy-web/
 
-mkdir -p brain-machine-bevy-web/
+mkdir -p mechatrek-bevy-web/
 
-cp web/index.html brain-machine-bevy-web/
+cp web/index.html mechatrek-bevy-web/
 
 cargo build \
 --profile wasm-release \
@@ -68,14 +68,14 @@ cargo build \
 --features log-max
 
 wasm-bindgen \
---out-name brain_machine_bevy \
---out-dir brain-machine-bevy-web/ \
+--out-name mechatrek_bevy \
+--out-dir mechatrek-bevy-web/ \
 --target web \
-target/wasm32-unknown-unknown/wasm-release/brain-machine-bevy.wasm
+target/wasm32-unknown-unknown/wasm-release/mechatrek-bevy.wasm
 
-zip -mr brain-machine-bevy-web.zip brain-machine-bevy-web/
+zip -mr mechatrek-bevy-web.zip mechatrek-bevy-web/
 
-mv brain-machine-bevy-web.zip dist/v0.0.1/
+mv mechatrek-bevy-web.zip dist/v0.0.1/
 
 
 
@@ -103,7 +103,7 @@ cd android/
 cd ..
 
 cp android/app/build/outputs/apk/debug/app-debug.apk \
-dist/v0.0.1/brain-machine-bevy.apk
+dist/v0.0.1/mechatrek-bevy.apk
 
 
 

@@ -6,4 +6,4 @@
 *.zip
 
 /dist
-/brain-machine-bevy-web*
+/mechatrek-bevy-web*

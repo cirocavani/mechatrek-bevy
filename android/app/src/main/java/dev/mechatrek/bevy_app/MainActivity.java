@@ -1,4 +1,4 @@
-package dev.brain_machine.bevy_app;
+package dev.mechatrek.bevy_app;
 
 import android.view.View;
 import android.view.WindowInsets;
@@ -8,7 +8,7 @@ import com.google.androidgamesdk.GameActivity;
 
 public class MainActivity extends GameActivity {
     static {
-        System.loadLibrary("brain_machine_bevy");
+        System.loadLibrary("mechatrek_bevy");
     }
 
     @Override
