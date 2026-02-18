@@ -972,6 +972,6 @@ make android-emulator
 ```
 
 
-## Book of Dev
+## Making Of Documentation
 
-[README](./dev-book/README.md)
+[README](./garage/scraps/README.md)
