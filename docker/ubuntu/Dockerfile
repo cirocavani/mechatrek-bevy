@@ -1,4 +1,4 @@
-FROM ubuntu:25.04
+FROM ubuntu:26.04
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
@@ -35,7 +35,7 @@ RUN apt update && \
     vulkan-tools && \
     apt distclean
 
-RUN update-alternatives --install /usr/bin/lldb-dap lldb-dap /usr/bin/lldb-dap-20 1000
+RUN update-alternatives --install /usr/bin/lldb-dap lldb-dap /usr/bin/lldb-dap-21 1000
 
 RUN groupadd --gid ${GROUP_ID} user
 RUN useradd -m --uid ${USER_ID} --gid ${GROUP_ID} -G sudo user
@@ -63,7 +63,7 @@ RUN cargo binstall -y \
 RUN rustup target add wasm32-unknown-unknown
 
 RUN cargo binstall -y \
-    wasm-bindgen-cli@0.2.100 \
+    wasm-bindgen-cli@0.2.108 \
     simple-http-server
 
 RUN rm -rf ~/.cargo/{registry,git}

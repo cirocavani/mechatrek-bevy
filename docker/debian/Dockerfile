@@ -1,4 +1,4 @@
-FROM debian:12
+FROM debian:13
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
@@ -61,7 +61,7 @@ RUN cargo binstall -y \
 RUN rustup target add wasm32-unknown-unknown
 
 RUN cargo binstall -y \
-    wasm-bindgen-cli@0.2.100 \
+    wasm-bindgen-cli@0.2.108 \
     simple-http-server
 
 RUN rm -rf ~/.cargo/{registry,git}

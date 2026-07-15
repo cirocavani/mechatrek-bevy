@@ -1,4 +1,4 @@
-# The Book of the Machine - Bevy Experimental Project
+# The Book of the Machine - Mechatrek Bevy Project
 
 
 > Bevy is a refreshingly simple data-driven game engine built in Rust.
@@ -21,8 +21,8 @@ Pre-requisites:
 
 Development Host:
 
-- Ubuntu 25.04 Plucky
-- Gnome 48 on Wayland
+- Ubuntu 26.04 Resolute
+- Gnome 50 on Wayland
 - CPU Intel Core 7 x86_64
 - GPU Integrated Intel Graphics
 - GPU Discrete NVIDIA GeForce MX570 A 2GB
@@ -238,7 +238,7 @@ clang --version
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
 sudo gpg --dearmor -o /usr/share/keyrings/docker-keyring.gpg --yes
 
-echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-keyring.gpg] https://download.docker.com/linux/ubuntu plucky stable' | \
+echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-keyring.gpg] https://download.docker.com/linux/ubuntu resolute stable' | \
 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 sudo apt update
@@ -259,7 +259,7 @@ newgrp docker
 
 docker run \
 --rm \
-ubuntu:25.04 \
+ubuntu:26.04 \
 uname -mo
 
 # x86_64 GNU/Linux
@@ -272,7 +272,7 @@ docker run \
 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
 -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY \
 -v /etc/machine-id:/etc/machine-id:ro \
-ubuntu:25.04 \
+ubuntu:26.04 \
 sh -c 'export DEBIAN_FRONTEND=noninteractive;
 apt update;
 apt install -y --no-install-recommends mesa-vulkan-drivers mesa-utils vulkan-tools;
@@ -370,7 +370,7 @@ binfmt-support
 docker run \
 --rm \
 --platform linux/arm64 \
-debian:12 \
+debian:13 \
 uname -mo
 
 # aarch64 GNU/Linux
@@ -383,7 +383,7 @@ docker run \
 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
 -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY \
 -v /etc/machine-id:/etc/machine-id:ro \
-debian:12 \
+debian:13 \
 sh -c 'export DEBIAN_FRONTEND=noninteractive;
 apt update;
 apt install -y --no-install-recommends mesa-vulkan-drivers mesa-utils vulkan-tools;
@@ -474,7 +474,7 @@ docker run \
 --rm \
 --runtime nvidia \
 --gpus all \
-ubuntu:25.04 \
+ubuntu:26.04 \
 nvidia-smi
 
 # -> [Output nvidia-smi]
@@ -489,7 +489,7 @@ docker run --rm \
 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
 -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY \
 -v /etc/machine-id:/etc/machine-id:ro \
-ubuntu:25.04 \
+ubuntu:26.04 \
 sh -c 'export DEBIAN_FRONTEND=noninteractive;
 apt update;
 apt install -y --no-install-recommends mesa-vulkan-drivers mesa-utils vulkan-tools;
@@ -628,7 +628,7 @@ GPU2:
 ```sh
 rustup target add wasm32-unknown-unknown
 
-cargo binstall -y wasm-bindgen-cli@0.2.100
+cargo binstall -y wasm-bindgen-cli@0.2.108
 
 wasm-bindgen --version
 
@@ -894,7 +894,7 @@ make clean
 ### Docker
 
 ```sh
-# Ubuntu 25.04 x86_64 (development)
+# Ubuntu 26.04 x86_64 (development)
 
 # Build Docker Image `mechatrek-bevy-ubuntu`
 make docker-build-ubuntu-amd64
@@ -910,7 +910,7 @@ make docker-ubuntu-amd64
 make docker-ubuntu-amd64-nvidia
 
 
-# Debian 12 ARM64 (emulator) - Raspberry Pi
+# Debian 13 ARM64 (emulator) - Raspberry Pi
 
 # Build Docker Image `mechatrek-bevy-debian`
 make docker-build-debian-arm64

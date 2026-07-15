@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Project Setup
-# Ubuntu 25.04 Plucky (NVIDIA GPU)
+# Ubuntu 26.04 Resolute (NVIDIA GPU)
 
 set -eu
 
@@ -51,7 +51,7 @@ sudo apt install -y \
 clang \
 lld
 
-# Debina 12
+# Debina 13
 #
 # sudo apt install -y --no-install-recommends clang-19 lld-19
 # 
@@ -86,7 +86,7 @@ echo
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
 sudo gpg --dearmor -o /usr/share/keyrings/docker-keyring.gpg --yes
 
-echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-keyring.gpg] https://download.docker.com/linux/ubuntu plucky stable' | \
+echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-keyring.gpg] https://download.docker.com/linux/ubuntu resolute stable' | \
 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 sudo apt update
@@ -127,7 +127,7 @@ sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list > /dev/null
 
 sudo apt update
 
-sudo apt install -y --no-install-recommends nvidia-driver-570
+sudo apt install -y --no-install-recommends nvidia-driver-580
 sudo apt install -y --no-install-recommends nvidia-container-toolkit
 
 

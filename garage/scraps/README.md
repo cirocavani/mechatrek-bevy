@@ -1,4 +1,4 @@
-# The Book of the Machine - Bevy Experimental Project (Development)
+# The Book of the Machine - Mechatrek Bevy Project (Development)
 
 
 > Bevy is a refreshingly simple data-driven game engine built in Rust.

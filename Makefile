@@ -254,7 +254,7 @@ open-android-emulator: export __VK_LAYER_NV_optimus=NVIDIA_only
 open-android-emulator: export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
 open-android-emulator:
 	. android-env.sh && \
-	emulator -avd Pixel_9_Pro_API_35 -gpu host -netdelay none -netspeed full
+	emulator -avd Pixel_9_Pro_API_35 -gpu host -netdelay none -netspeed full -wipe-data
 
 .PHONY: android-device
 android-device: build-android-lib build-android-apk install-apk-device
