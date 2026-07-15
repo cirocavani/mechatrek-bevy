@@ -33,6 +33,10 @@ release-amd64:
 	--target x86_64-unknown-linux-gnu \
 	--features log-max,wayland
 
+.PHONY: run
+run:
+	cargo run --features dev,wayland
+
 .PHONY: clean
 clean:
 	cargo clean
@@ -219,13 +223,14 @@ build-android-lib:
 	. android-env.sh && \
 	rm -rf android/app/src/main/jniLibs/ && \
 	cargo ndk \
+	-P 31 \
 	-t arm64-v8a \
 	-t x86_64 \
 	-o android/app/src/main/jniLibs \
 	build \
 	--lib \
 	--profile mobile-release \
-	--features log-max
+	--features log-max,android
 
 .PHONY: build-android-apk
 build-android-apk:

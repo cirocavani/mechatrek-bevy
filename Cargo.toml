@@ -4,11 +4,12 @@ version = "0.0.1"
 edition = "2024"
 
 [dependencies]
-bevy = "0.16.1"
-log = "0.4.29"
+bevy = "0.19.0"
+log = "0.4.33"
 
 [features]
 wayland = ["bevy/wayland"]
+android = ["bevy/android-game-activity"]
 dev = ["bevy-dev", "log-max"]
 bevy-dev = ["bevy/dynamic_linking"]
 log-max = ["log/max_level_debug", "log/release_max_level_warn"]
