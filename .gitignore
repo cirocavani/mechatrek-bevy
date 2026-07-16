@@ -1,6 +1,7 @@
 /target
 /web/*
 !/web/index.html
+!/web/assets
 
 *.deb
 *.zip

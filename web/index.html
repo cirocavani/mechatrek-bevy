@@ -1,11 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8">
     <title>Mechatrek</title>
-  </head>
-  <script type="module">
-    import init from "./mechatrek_bevy.js"
-    init()
-  </script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
+        /* Style for the user interaction prompt */
+        #audio-gate-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #18181a;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999;
+            font-family: sans-serif;
+        }
+        #play-button {
+            padding: 16px 32px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            background: #007acc;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.1s ease;
+        }
+        #play-button:hover { background: #0098ff; }
+        #play-button:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <!-- This overlay forces a user gesture -->
+    <div id="audio-gate-overlay">
+        <button id="play-button">CLICK TO PLAY</button>
+    </div>
+
+    <!-- Your standard Bevy canvas target -->
+    <canvas id="bevy-canvas"></canvas>
+
+    <!-- Load your WASM bindgen generated JS wrapper -->
+    <script type="module">
+        import init from "./mechatrek_bevy.js"
+
+        const playButton = document.getElementById("play-button");
+        const overlay = document.getElementById("audio-gate-overlay");
+
+        playButton.addEventListener("click", async () => {
+            // 1. Create a dummy AudioContext inside the user interaction callback
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                const dummyCtx = new AudioContext();
+                await dummyCtx.resume();
+                // Doing this marks the page as "unlocked" for audio playback
+            }
+
+            // 2. Remove the overlay to reveal the canvas element
+            overlay.remove();
+
+            // 3. Fire up the Bevy Engine 
+            // Because the tab is unlocked, bevy_audio's initialization will succeed cleanly
+            await init();
+        });
+    </script>
+</body>
 </html>

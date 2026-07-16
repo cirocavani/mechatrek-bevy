@@ -191,7 +191,7 @@ build-web: build-wasm
 
 .PHONY: serve-web
 serve-web:
-	simple-http-server -i web/
+	simple-http-server -i --nocache web/
 
 .PHONY: open-web
 open-web: export __NV_PRIME_RENDER_OFFLOAD=1

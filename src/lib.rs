@@ -36,6 +36,11 @@ pub fn main() {
                     prefers_status_bar_hidden: true,
                     // Only has an effect on iOS
                     preferred_screen_edges_deferring_system_gestures: ScreenEdge::Bottom,
+                    // Tells Bevy to attach explicitly to our predefined HTML canvas
+                    #[cfg(target_arch = "wasm32")]
+                    canvas: Some("#bevy-canvas".to_string()),
+                    #[cfg(target_arch = "wasm32")]
+                    fit_canvas_to_parent: true,
                     ..default()
                 }),
                 ..default()
