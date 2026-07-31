@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v7
         with:
           fetch-depth: 1
@@ -48,7 +48,7 @@ jobs:
           restore-keys: |
             cargo-ci-${{ matrix.arch }}-
 
-      - name: Build Linux binary
+      - name: Build Linux Binary
         run: |
           docker pull ${{ matrix.build_image }}
 
@@ -66,13 +66,13 @@ jobs:
     runs-on: ubuntu-26.04
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v7
         with:
           fetch-depth: 1
           lfs: true
 
-      - name: Install Rust target & wasm-bindgen
+      - name: Install Rust Target & wasm-bindgen
         run: |
           rustup target add wasm32-unknown-unknown
           cargo install wasm-bindgen-cli --version 0.2.126
@@ -95,7 +95,7 @@ jobs:
     runs-on: ubuntu-26.04
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v7
         with:
           fetch-depth: 1
@@ -132,7 +132,7 @@ jobs:
           restore-keys: |
             cargo-ci-android-
 
-      - name: Build Android shared library
+      - name: Build Android Shared Library
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
