@@ -52,6 +52,9 @@ jobs:
         run: |
           docker pull ${{ matrix.build_image }}
 
+          mkdir -p "$HOME/.cargo/registry"
+          mkdir -p "$HOME/.cargo/git"
+
           docker run --rm \
             -v "${{ github.workspace }}":/home/mechatrek/project \
             -v "$HOME/.cargo/registry":/home/mechatrek/.cargo/registry \
@@ -148,4 +151,4 @@ jobs:
         run: |
           cd android/
           chmod +x gradlew
-          ./gradlew --warning-mode all clean assembleDebug
+          ./gradlew --warning-mode all clean build
