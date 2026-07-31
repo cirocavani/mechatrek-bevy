@@ -50,6 +50,8 @@ jobs:
 
       - name: Build Linux binary
         run: |
+          docker pull ${{ matrix.build_image }}
+
           docker run --rm \
             -v "${{ github.workspace }}":/home/mechatrek/project \
             -v "$HOME/.cargo/registry":/home/mechatrek/.cargo/registry \
