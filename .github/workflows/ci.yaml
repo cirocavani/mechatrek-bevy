@@ -23,12 +23,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    container:
-      image: ${{ matrix.build_image }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
