@@ -69,10 +69,10 @@ docker-run-ubuntu-amd64:
 	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
 	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
 	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/user/project/target/x86_64-unknown-linux-gnu \
-	-v ${PWD}:/home/user/project \
-	-v ${HOME}/.cargo/registry:/home/user/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/user/.cargo/git \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
 	mechatrek-bevy-ubuntu:latest \
 	cargo run --features dev,wayland
 
@@ -92,10 +92,10 @@ docker-run-ubuntu-amd64-nvidia:
 	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
 	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
 	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/user/project/target/x86_64-unknown-linux-gnu \
-	-v ${PWD}:/home/user/project \
-	-v ${HOME}/.cargo/registry:/home/user/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/user/.cargo/git \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
 	mechatrek-bevy-ubuntu:latest \
 	cargo run --features dev,wayland
 
@@ -116,10 +116,10 @@ docker-shell-ubuntu-amd64:
 	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
 	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
 	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/user/project/target/x86_64-unknown-linux-gnu \
-	-v ${PWD}:/home/user/project \
-	-v ${HOME}/.cargo/registry:/home/user/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/user/.cargo/git \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
 	mechatrek-bevy-ubuntu:latest
 
 
@@ -143,10 +143,10 @@ docker-run-debian-arm64:
 	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
 	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
 	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/user/project/target/aarch64-unknown-linux-gnu \
-	-v ${PWD}:/home/user/project \
-	-v ${HOME}/.cargo/registry:/home/user/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/user/.cargo/git \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/aarch64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
 	mechatrek-bevy-debian:latest \
 	cargo run --features dev,wayland
 
@@ -164,10 +164,10 @@ docker-shell-debian-arm64:
 	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
 	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
 	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/user/project/target/aarch64-unknown-linux-gnu \
-	-v ${PWD}:/home/user/project \
-	-v ${HOME}/.cargo/registry:/home/user/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/user/.cargo/git \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/aarch64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
 	mechatrek-bevy-debian:latest
 
 

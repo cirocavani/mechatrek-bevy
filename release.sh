@@ -16,9 +16,9 @@ docker run \
 --rm \
 -it \
 --platform linux/amd64 \
--v $PWD:/home/user/project \
--v $HOME/.cargo/registry:/home/user/.cargo/registry \
--v $HOME/.cargo/git:/home/user/.cargo/git \
+-v $PWD:/home/mechatrek/project \
+-v $HOME/.cargo/registry:/home/mechatrek/.cargo/registry \
+-v $HOME/.cargo/git:/home/mechatrek/.cargo/git \
 mechatrek-bevy-ubuntu:latest \
 cargo build \
 --profile release-lto \
@@ -38,9 +38,9 @@ docker run \
 --rm \
 -it \
 --platform linux/arm64 \
--v $PWD:/home/user/project \
--v $HOME/.cargo/registry:/home/user/.cargo/registry \
--v $HOME/.cargo/git:/home/user/.cargo/git \
+-v $PWD:/home/mechatrek/project \
+-v $HOME/.cargo/registry:/home/mechatrek/.cargo/registry \
+-v $HOME/.cargo/git:/home/mechatrek/.cargo/git \
 mechatrek-bevy-debian:latest \
 cargo build \
 --profile release-lto \
@@ -61,6 +61,7 @@ rm -rf mechatrek-bevy-web/
 mkdir -p mechatrek-bevy-web/
 
 cp web/index.html mechatrek-bevy-web/
+cp -r assets mechatrek-bevy-web/
 
 cargo build \
 --profile wasm-release \

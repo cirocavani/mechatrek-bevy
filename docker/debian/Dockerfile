@@ -3,7 +3,7 @@ ARG USER_ID=1000
 ARG GROUP_ID=1000
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    PATH="/home/user/.cargo/bin:${PATH}"
+    PATH="/home/mechatrek/.cargo/bin:${PATH}"
 
 RUN apt update && \
     apt install -y --no-install-recommends \
@@ -35,13 +35,13 @@ RUN update-alternatives --install /usr/bin/lld lld /usr/bin/lld-19 100
 RUN update-alternatives --install /usr/bin/cc cc /usr/bin/clang-19 100
 RUN update-alternatives --install /usr/bin/lldb-dap lldb-dap /usr/bin/lldb-dap-19 1000
 
-RUN groupadd --gid ${GROUP_ID} user
-RUN useradd -m --uid ${USER_ID} --gid ${GROUP_ID} -G sudo user
-RUN passwd -d user
-RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_user-nopasswd
+RUN groupadd --gid ${GROUP_ID} mechatrek
+RUN useradd -m --uid ${USER_ID} --gid ${GROUP_ID} -G sudo mechatrek
+RUN passwd -d mechatrek
+RUN echo "mechatrek ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_mechatrek-nopasswd
 
-USER user
-WORKDIR /home/user
+USER mechatrek
+WORKDIR /home/mechatrek
 
 
 # Rust Toolchain install
@@ -78,7 +78,7 @@ RUN ln -s ~/.local/helix/runtime ~/.config/helix/
 RUN rustup component add rust-analyzer
 
 
-VOLUME ["/home/user/project", "/home/user/.cargo/registry", "/home/user/.cargo/git"]
-WORKDIR /home/user/project
+VOLUME ["/home/mechatrek/project", "/home/mechatrek/.cargo/registry", "/home/mechatrek/.cargo/git"]
+WORKDIR /home/mechatrek/project
 
 CMD ["/bin/bash", "-l"]

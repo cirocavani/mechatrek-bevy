@@ -459,10 +459,10 @@ docker run \
 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
 -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY \
 -v /etc/machine-id:/etc/machine-id:ro \
--e CARGO_TARGET_DIR=/home/user/project/target/x86_64-unknown-linux-gnu \
--v $PWD:/home/user/project \
--v $HOME/.cargo/registry:/home/user/.cargo/registry \
--v $HOME/.cargo/git:/home/user/.cargo/git \
+-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
+-v $PWD:/home/mechatrek/project \
+-v $HOME/.cargo/registry:/home/mechatrek/.cargo/registry \
+-v $HOME/.cargo/git:/home/mechatrek/.cargo/git \
 mechatrek-bevy-ubuntu:latest \
 cargo run --features dev,wayland
 
@@ -525,10 +525,10 @@ docker run \
 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
 -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY \
 -v /etc/machine-id:/etc/machine-id:ro \
--e CARGO_TARGET_DIR=/home/user/project/target/aarch64-unknown-linux-gnu \
--v $PWD:/home/user/project \
--v $HOME/.cargo/registry:/home/user/.cargo/registry \
--v $HOME/.cargo/git:/home/user/.cargo/git \
+-e CARGO_TARGET_DIR=/home/mechatrek/project/target/aarch64-unknown-linux-gnu \
+-v $PWD:/home/mechatrek/project \
+-v $HOME/.cargo/registry:/home/mechatrek/.cargo/registry \
+-v $HOME/.cargo/git:/home/mechatrek/.cargo/git \
 mechatrek-bevy-debian:latest \
 cargo run --features dev,wayland
 
@@ -663,10 +663,10 @@ docker run \
 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
 -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY \
 -v /etc/machine-id:/etc/machine-id:ro \
--e CARGO_TARGET_DIR=/home/user/project/target/x86_64-unknown-linux-gnu \
--v $PWD:/home/user/project \
--v $HOME/.cargo/registry:/home/user/.cargo/registry \
--v $HOME/.cargo/git:/home/user/.cargo/git \
+-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
+-v $PWD:/home/mechatrek/project \
+-v $HOME/.cargo/registry:/home/mechatrek/.cargo/registry \
+-v $HOME/.cargo/git:/home/mechatrek/.cargo/git \
 mechatrek-bevy-ubuntu:latest \
 cargo run --features dev,wayland
 
@@ -2960,9 +2960,9 @@ docker run \
 --rm \
 -it \
 --platform linux/amd64 \
--v $PWD:/home/user/project \
--v $HOME/.cargo/registry:/home/user/.cargo/registry \
--v $HOME/.cargo/git:/home/user/.cargo/git \
+-v $PWD:/home/mechatrek/project \
+-v $HOME/.cargo/registry:/home/mechatrek/.cargo/registry \
+-v $HOME/.cargo/git:/home/mechatrek/.cargo/git \
 mechatrek-bevy-ubuntu:latest \
 cargo build \
 --profile release-lto \
@@ -2978,7 +2978,7 @@ file -b target/x86_64-unknown-linux-gnu/release-lto/mechatrek-bevy
 # ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=7237a657dfe72c8ab4d4ebc13cc09b86234b7714, stripped
 
 docker run --rm --platform linux/amd64 \
--v $PWD:/home/user/project \
+-v $PWD:/home/mechatrek/project \
 mechatrek-bevy-ubuntu:latest \
 ldd target/x86_64-unknown-linux-gnu/release-lto/mechatrek-bevy
 
@@ -3006,9 +3006,9 @@ docker run \
 --rm \
 -it \
 --platform linux/arm64 \
--v $PWD:/home/user/project \
--v $HOME/.cargo/registry:/home/user/.cargo/registry \
--v $HOME/.cargo/git:/home/user/.cargo/git \
+-v $PWD:/home/mechatrek/project \
+-v $HOME/.cargo/registry:/home/mechatrek/.cargo/registry \
+-v $HOME/.cargo/git:/home/mechatrek/.cargo/git \
 mechatrek-bevy-debian:latest \
 cargo build \
 --profile release-lto \
@@ -3025,7 +3025,7 @@ file -b target/aarch64-unknown-linux-gnu/release-lto/mechatrek-bevy
 # ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, for GNU/Linux 3.7.0, BuildID[sha1]=613d5badacc2a2fb492d0df3676f5bcc99baa191, stripped
 
 docker run --rm --platform linux/arm64 \
--v $PWD:/home/user/project \
+-v $PWD:/home/mechatrek/project \
 mechatrek-bevy-debian:latest \
 ldd target/aarch64-unknown-linux-gnu/release-lto/mechatrek-bevy
 
@@ -3148,4 +3148,95 @@ ls -alh dist/v0.0.1/
 # -rwxrwxr-x 1 cavani cavani  44M May  4 12:51 mechatrek-bevy-linux-x86_64*
 # -rw-rw-r-- 1 cavani cavani 6.5M May  4 11:55 mechatrek-bevy-web.zip
 # -rw-rw-r-- 1 cavani cavani  88M May  4 13:11 mechatrek-bevy.apk
+```
+
+### GitHub Action
+
+
+<https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow>
+
+<https://github.com/actions/runner-images>
+
+
+<https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-docker-images>
+
+<https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry>
+
+<https://github.com/docker/login-action>
+
+<https://github.com/docker/setup-buildx-action>
+
+<https://github.com/docker/build-push-action>
+
+<https://github.com/actions/attest-build-provenance>
+
+
+`.github/workflows/docker.yaml`
+
+```yaml
+name: Development Docker Images
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
+
+jobs:
+  docker-devel:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-26.04
+            dockerfile: docker/ubuntu/Dockerfile
+            image_name: ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-ubuntu
+            platform: linux/amd64
+          - os: ubuntu-26.04-arm
+            dockerfile: docker/debian/Dockerfile
+            image_name: ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-debian
+            platform: linux/arm64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker build and push
+        uses: docker/build-push-action@v6
+        id: docker-build
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          platforms: ${{ matrix.platform }}
+          tags: ${{ matrix.image_name }}:latest
+          push: true
+  
+      - name: Docker artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ matrix.image_name }}
+          subject-digest: ${{ steps.docker-build.outputs.digest }}
+          push-to-registry: true
+```
+
+`.github/workflows/release.yaml`
+
+```yaml
+    
 ```
