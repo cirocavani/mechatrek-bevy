@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-linux:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-26.04
+            arch: x86_64
+            build_image: ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-ubuntu:latest
+          - os: ubuntu-26.04-arm
+            arch: aarch64
+            build_image: ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-debian:latest
+
+    runs-on: ${{ matrix.os }}
+
+    container:
+      image: ${{ matrix.build_image }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Cache Cargo Build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: cargo-ci-${{ matrix.arch }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-ci-${{ matrix.arch }}-
+
+      - name: Build Linux binary
+        run: cargo build --features dev,wayland
+
+  build-wasm:
+    runs-on: ubuntu-26.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install Rust target & wasm-bindgen
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.126
+
+      - name: Cache Cargo Build (WASM)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: cargo-ci-wasm32-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-ci-wasm32-
+
+      - name: Build WASM binary
+        run: cargo build --target wasm32-unknown-unknown --features log-max
+
+  build-android:
+    runs-on: ubuntu-26.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r27d
+
+      - name: Add Rust Android Targets
+        run: |
+          rustup target add aarch64-linux-android x86_64-linux-android
+
+      - name: Install cargo-ndk
+        run: |
+          cargo install cargo-ndk
+
+      - name: Cache Cargo Build (Android)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: cargo-ci-android-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-ci-android-
+
+      - name: Build Android shared library
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: |
+          rm -rf android/app/src/main/jniLibs/
+
+          cargo ndk \
+            -P 31 \
+            -t arm64-v8a \
+            -t x86_64 \
+            -o android/app/src/main/jniLibs \
+            build \
+            --lib \
+            --features log-max,android
+
+      - name: Build APK with Gradle
+        run: |
+          cd android/
+          chmod +x gradlew
+          ./gradlew --warning-mode all clean assembleDebug
