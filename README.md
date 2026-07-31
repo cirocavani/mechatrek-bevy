@@ -974,4 +974,4 @@ make android-emulator
 
 ## Making Of Documentation
 
-[README](./garage/scraps/README.md)
+[README](./garage/workbench/README.md)

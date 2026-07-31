@@ -3174,7 +3174,7 @@ ls -alh dist/v0.0.1/
 `.github/workflows/docker.yaml`
 
 ```yaml
-name: Development Docker Images
+name: Docker Images for Development
 
 on:
   workflow_dispatch:
@@ -3184,7 +3184,6 @@ permissions:
   packages: write
   attestations: write
   id-token: write
-
 
 jobs:
   docker-devel:
@@ -3206,8 +3205,10 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-      - name: Log in to the Container registry
+      - name: Log in to the container registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -3238,5 +3239,4 @@ jobs:
 `.github/workflows/release.yaml`
 
 ```yaml
-    
 ```
