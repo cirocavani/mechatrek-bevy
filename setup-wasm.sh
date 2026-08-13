@@ -10,7 +10,7 @@ echo
 
 rustup target add wasm32-unknown-unknown
 
-cargo binstall -y wasm-bindgen-cli@0.2.126
+cargo binstall -y wasm-bindgen-cli@0.2.127
 
 
 echo

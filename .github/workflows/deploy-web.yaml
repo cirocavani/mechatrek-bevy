@@ -27,7 +27,7 @@ jobs:
       - name: Install Rust Target & wasm-bindgen
         run: |
           rustup target add wasm32-unknown-unknown
-          cargo install wasm-bindgen-cli --version 0.2.126
+          cargo install wasm-bindgen-cli --version 0.2.127
 
       - name: Cache Cargo Build (WASM)
         uses: actions/cache@v6
@@ -47,7 +47,7 @@ jobs:
             --target wasm32-unknown-unknown \
             --features log-max
 
-      - name: Bindgen & Package WASM
+      - name: Bindgen & WASM site
         run: |
           rm -rf dist/mechatrek-bevy-web/
           mkdir -p dist/mechatrek-bevy-web/
