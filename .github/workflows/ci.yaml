@@ -114,26 +114,6 @@ jobs:
           fetch-depth: 1
           lfs: true
 
-      - name: Set up Java JDK 17
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Set up Android NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r27d
-
-      - name: Add Rust Android Targets
-        run: |
-          rustup target add aarch64-linux-android x86_64-linux-android
-
-      - name: Install cargo-ndk
-        run: |
-          cargo install cargo-ndk
-
       - name: Cache Cargo Build (Android)
         uses: actions/cache@v6
         with:
@@ -141,27 +121,32 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
+            ~/.gradle/caches/
           key: cargo-ci-android-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             cargo-ci-android-
 
-      - name: Build Android Shared Library
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-        run: |
-          rm -rf android/app/src/main/jniLibs/
+      - name: Cache Gradle Build (Android)
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.gradle/caches/
+          key: gradle-ci-android-${{ hashFiles('**/libs.versions.toml') }}
+          restore-keys: |
+            gradle-ci-android-
 
-          cargo ndk \
-            -P 31 \
-            -t arm64-v8a \
-            -t x86_64 \
-            -o android/app/src/main/jniLibs \
-            build \
-            --lib \
-            --features log-max,android
-
-      - name: Build APK with Gradle
+      - name: Build Android Package
         run: |
-          cd android/
-          chmod +x gradlew
-          ./gradlew --warning-mode all clean assembleDebug
+          docker pull ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-ubuntu:latest
+
+          mkdir -p "$HOME/.cargo/registry"
+          mkdir -p "$HOME/.cargo/git"
+          mkdir -p "$HOME/.cargo/caches"
+
+          docker run --rm \
+            -v "${{ github.workspace }}":/home/mechatrek/project \
+            -v "$HOME/.cargo/registry":/home/mechatrek/.cargo/registry \
+            -v "$HOME/.cargo/git":/home/mechatrek/.cargo/git \
+            -v "$HOME/.gradle/caches":/home/mechatrek/.gradle/caches \
+            ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-ubuntu:latest \
+            make build-android-lib build-android-apk

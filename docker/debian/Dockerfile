@@ -2,8 +2,8 @@ FROM debian:13
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
-ENV DEBIAN_FRONTEND=noninteractive \
-    PATH="/home/mechatrek/.cargo/bin:${PATH}"
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PATH="/home/mechatrek/.cargo/bin:${PATH}"
 
 RUN apt update && \
     apt install -y --no-install-recommends \
@@ -13,6 +13,8 @@ RUN apt update && \
     make \
     tar \
     xz-utils \
+    zip \
+    unzip \
     libssl-dev \
     lldb-19 \
     clang-19 \
@@ -46,25 +48,25 @@ WORKDIR /home/mechatrek
 
 # Rust Toolchain install
 
-RUN curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | \
-    sh -s -- --default-toolchain stable -y
+RUN curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain stable -y
 
-RUN curl --proto "=https" --tlsv1.2 -sSfL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | \
-    bash
+RUN curl --proto "=https" --tlsv1.2 -sSfL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
 
 RUN cargo binstall -y \
     cargo-edit \
     cargo-sort \
     cargo-update \
-    zellij
+    zellij \
+    nu
+
+
+# WebAssembly tools
 
 RUN rustup target add wasm32-unknown-unknown
 
 RUN cargo binstall -y \
     wasm-bindgen-cli@0.2.127 \
     simple-http-server
-
-RUN rm -rf ~/.cargo/{registry,git}
 
 
 # Helix Editor install
@@ -77,6 +79,8 @@ RUN ln -s ~/.local/helix/runtime ~/.config/helix/
 
 RUN rustup component add rust-analyzer
 
+
+RUN rm -rf ~/.cargo/{registry,git}
 
 VOLUME ["/home/mechatrek/project", "/home/mechatrek/.cargo/registry", "/home/mechatrek/.cargo/git"]
 WORKDIR /home/mechatrek/project

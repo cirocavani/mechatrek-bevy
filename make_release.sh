@@ -8,8 +8,6 @@ PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RELEASE_DIR=${PROJECT_DIR}/dist/${VERSION}
 PKG_FILE=${RELEASE_DIR}/${PKG_NAME}
 
-
-cd ${PROJECT_DIR}
 rm -rf ${RELEASE_DIR}
 mkdir -p ${RELEASE_DIR}
 
@@ -56,9 +54,7 @@ docker run --rm -it --platform linux/amd64 \
 mechatrek-bevy-ubuntu:latest \
 make build-web
 
-cd web
-zip -r ${PKG_FILE}-web.zip .
-cd ..
+zip -r ${PKG_FILE}-web.zip web/*
 
 
 
@@ -66,25 +62,13 @@ echo
 echo "APK release"
 echo
 
-. android-env.sh
-
-rm -rf android/app/src/main/jniLibs/
-
-cargo ndk \
--P 31 \
--t arm64-v8a \
--t x86_64 \
--o android/app/src/main/jniLibs \
-build \
---lib \
---profile mobile-release \
---features log-max,android
-
-cd android/
-
-./gradlew --warning-mode all clean build
-
-cd ..
+docker run --rm -it --platform linux/amd64 \
+-v ${PWD}:/home/mechatrek/project \
+-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
+-v ${HOME}/.gradle/caches:/home/mechatrek/.gradle/caches \
+mechatrek-bevy-ubuntu:latest \
+make build-android-lib build-android-apk
 
 cp android/app/build/outputs/apk/debug/app-debug.apk ${PKG_FILE}.apk
 

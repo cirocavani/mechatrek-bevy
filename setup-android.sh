@@ -45,7 +45,7 @@ unzip commandlinetools-linux-13114758_latest.zip
 cmdline-tools/bin/sdkmanager \
 --sdk_root=$ANDROID_HOME \
 --install \
-'build-tools;35.0.0' \
+'build-tools;36.0.0' \
 'cmake;3.22.1' \
 'cmdline-tools;latest' \
 'ndk;27.0.12077973' \

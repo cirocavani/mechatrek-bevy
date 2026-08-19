@@ -818,7 +818,7 @@ unzip commandlinetools-linux-13114758_latest.zip
 cmdline-tools/bin/sdkmanager \
 --sdk_root=$ANDROID_HOME \
 --install \
-'build-tools;35.0.0' \
+'build-tools;36.0.0' \
 'cmake;3.22.1' \
 'cmdline-tools;latest' \
 'ndk;27.0.12077973' \
@@ -891,40 +891,6 @@ make clean
 ```
 
 
-### Docker
-
-```sh
-# Ubuntu 26.04 x86_64 (development)
-
-# Build Docker Image `mechatrek-bevy-ubuntu`
-make docker-build-ubuntu-amd64
-
-# Execute `cargo run` in a container based on `mechatrek-bevy-ubuntu`
-# (open a window using Wayland)
-make docker-run-ubuntu-amd64
-make docker-run-ubuntu-amd64-nvidia
-
-# Alias for build and run with ubuntu-amd64
-# (open a window using Wayland)
-make docker-ubuntu-amd64
-make docker-ubuntu-amd64-nvidia
-
-
-# Debian 13 ARM64 (emulator) - Raspberry Pi
-
-# Build Docker Image `mechatrek-bevy-debian`
-make docker-build-debian-arm64
-
-# Execute `cargo run` in a container based on `mechatrek-bevy-debian`
-# (open a window using Wayland)
-make docker-run-debian-arm64
-
-# Alias for build and run with debian-arm64
-# (open a window using Wayland)
-make docker-debian-arm64
-```
-
-
 ### WebAssembly
 
 ```sh
@@ -969,6 +935,40 @@ make android-device
 
 # Alias for build and install APK on emulator
 make android-emulator
+```
+
+
+### Docker
+
+```sh
+# Ubuntu 26.04 x86_64 (development)
+
+# Build Docker Image `mechatrek-bevy-ubuntu`
+make docker-build-ubuntu-amd64
+
+# Execute `cargo run` in a container based on `mechatrek-bevy-ubuntu`
+# (open a window using Wayland)
+make docker-run-ubuntu-amd64
+make docker-run-ubuntu-amd64-nvidia
+
+# Alias for build and run with ubuntu-amd64
+# (open a window using Wayland)
+make docker-ubuntu-amd64
+make docker-ubuntu-amd64-nvidia
+
+
+# Debian 13 ARM64 (emulator) - Raspberry Pi
+
+# Build Docker Image `mechatrek-bevy-debian`
+make docker-build-debian-arm64
+
+# Execute `cargo run` in a container based on `mechatrek-bevy-debian`
+# (open a window using Wayland)
+make docker-run-debian-arm64
+
+# Alias for build and run with debian-arm64
+# (open a window using Wayland)
+make docker-debian-arm64
 ```
 
 

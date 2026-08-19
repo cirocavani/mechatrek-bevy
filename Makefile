@@ -52,6 +52,7 @@ upgrade:
 .PHONY: docker-build-ubuntu-amd64
 docker-build-ubuntu-amd64:
 	docker build \
+	--progress plain \
 	--platform linux/amd64 \
 	--build-arg USER_ID=`id -u` \
 	--build-arg GROUP_ID=`id -g` \
@@ -117,6 +118,7 @@ docker-shell-ubuntu-amd64:
 .PHONY: docker-build-debian-arm64
 docker-build-debian-arm64:
 	docker build \
+	--progress plain \
 	--platform linux/arm64 \
 	--build-arg USER_ID=`id -u` \
 	--build-arg GROUP_ID=`id -g` \
@@ -222,7 +224,10 @@ docker-serve-web:
 
 .PHONY: build-android-lib
 build-android-lib:
-	. android-env.sh && \
+	@if [ -z "$$ANDROID_HOME" ]; then \
+		echo 'loading android-env.sh'; \
+		. android-env.sh; \
+	fi && \
 	rm -rf android/app/src/main/jniLibs/ && \
 	cargo ndk \
 	-P 31 \
@@ -236,18 +241,27 @@ build-android-lib:
 
 .PHONY: build-android-apk
 build-android-apk:
-	. android-env.sh && \
+	@if [ -z "$$ANDROID_HOME" ]; then \
+		echo 'loading android-env.sh'; \
+		. android-env.sh; \
+	fi && \
 	cd android/ && \
-	./gradlew --warning-mode all clean build
+	./gradlew clean build --no-daemon --warning-mode all 
 
 .PHONY: install-apk-emulator
 install-apk-emulator:
-	. android-env.sh && \
+	@if [ -z "$$ANDROID_HOME" ]; then \
+		echo 'loading android-env.sh'; \
+		. android-env.sh; \
+	fi && \
 	adb -e install android/app/build/outputs/apk/debug/app-debug.apk
 
 .PHONY: install-apk-device
 install-apk-device:
-	. android-env.sh && \
+	@if [ -z "$$ANDROID_HOME" ]; then \
+		echo 'loading android-env.sh'; \
+		. android-env.sh; \
+	fi && \
 	adb -d install android/app/build/outputs/apk/debug/app-debug.apk
 
 # WARNING
@@ -260,7 +274,10 @@ open-android-emulator: export __GLX_VENDOR_LIBRARY_NAME=nvidia
 open-android-emulator: export __VK_LAYER_NV_optimus=NVIDIA_only
 open-android-emulator: export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
 open-android-emulator:
-	. android-env.sh && \
+	@if [ -z "$$ANDROID_HOME" ]; then \
+		echo 'loading android-env.sh'; \
+		. android-env.sh; \
+	fi && \
 	emulator -avd Pixel_9_Pro_API_35 -gpu host -netdelay none -netspeed full -wipe-data
 
 .PHONY: android-device
@@ -268,3 +285,13 @@ android-device: build-android-lib build-android-apk install-apk-device
 
 .PHONY: android-emulator
 android-emulator: build-android-lib build-android-apk install-apk-emulator
+
+.PHONY: docker-build-android-apk
+docker-build-android-apk:
+	docker run --rm -it --platform linux/amd64 \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
+	-v ${HOME}/.gradle/caches:/home/mechatrek/.gradle/caches \
+	mechatrek-bevy-ubuntu:latest \
+	make build-android-lib build-android-apk
