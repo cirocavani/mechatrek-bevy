@@ -64,7 +64,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: github-pages
-          path: ./dist/mechatrek-bevy-web.tar.gz
+          path: dist/mechatrek-bevy-web.tar.gz
+          retention-days: 1
+          overwrite: true
 
   deploy:
     needs: build
