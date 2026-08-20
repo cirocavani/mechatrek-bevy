@@ -160,7 +160,7 @@ jobs:
 
           mkdir -p "$HOME/.cargo/registry"
           mkdir -p "$HOME/.cargo/git"
-          mkdir -p "$HOME/.cargo/caches"
+          mkdir -p "$HOME/.gradle/caches/9.5.0"
 
           docker run --rm \
             -v "${{ github.workspace }}":/home/mechatrek/project \
