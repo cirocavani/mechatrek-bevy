@@ -56,19 +56,17 @@ jobs:
             ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-ubuntu:latest \
             make build-web
 
-          mkdir -p dist/
-          rm -f dist/github-pages
-          tar czhvf dist/github-pages -C web .
+          rm -rf dist/mechatrek-bevy-web
+          mkdir -p dist/mechatrek-bevy-web
+          cp -r web/* dist/mechatrek-bevy-web/
+          rm dist/mechatrek-bevy-web/assets
+          cp -r assets dist/mechatrek-bevy-web/
 
       - name: Upload artifact for GitHub Pages
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-pages-artifact@v5
         with:
-          name: github-pages
-          path: dist/github-pages
-          retention-days: 1
-          overwrite: true
-          archive: false
-
+          path: ./dist/mechatrek-bevy-web
+  
   deploy:
     needs: build
 
