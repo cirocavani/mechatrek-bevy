@@ -57,14 +57,14 @@ jobs:
             make build-web
 
           mkdir -p dist/
-          rm -f dist/mechatrek-bevy-web.tar.gz
-          tar czhvf dist/mechatrek-bevy-web.tar.gz -C web .
+          rm -f dist/github-pages
+          tar czhvf dist/github-pages -C web .
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-artifact@v7
         with:
           name: github-pages
-          path: dist/mechatrek-bevy-web.tar.gz
+          path: dist/github-pages
           retention-days: 1
           overwrite: true
           archive: false
