@@ -15,7 +15,7 @@ This document describes the installation of:
 1. [Basic Utilities](#basic-utilities)
 2. [Build Dependencies](#build-dependencies)
 3. [Rust Toolchain](#rust-toolchain)
-4. [Compiler clang / ldd](#compiler-clang-ldd)
+4. [Compiler clang / lld](#compiler-clang--lld)
 5. [Docker Engine](#docker-engine)
 6. [Docker ARM64](#docker-arm64)
 7. [Docker NVIDIA GPU](#docker-nvidia-gpu)
