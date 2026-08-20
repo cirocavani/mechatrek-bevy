@@ -270,7 +270,6 @@ docker-ubuntu-amd64-shell:
 	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
 	mechatrek-bevy-ubuntu:latest
 
-
 # Docker / Debian Aarch64
 
 .PHONY: build-docker-debian-arm64
@@ -301,7 +300,6 @@ docker-debian-arm64-run:
 .PHONY: docker-debian-arm64
 docker-debian-arm64: build-docker-debian-arm64 docker-debian-arm64-run
 
-
 .PHONY: docker-debian-arm64-shell
 docker-debian-arm64-shell:
 	docker run --rm -it --platform linux/arm64 \
@@ -314,7 +312,6 @@ docker-debian-arm64-shell:
 	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
 	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
 	mechatrek-bevy-debian:latest
-
 
 # Docker / WebAssemply
 

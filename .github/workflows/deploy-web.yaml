@@ -1,4 +1,4 @@
-name: Deploy GHP
+name: Deploy Web
 
 on:
   workflow_dispatch:
@@ -66,7 +66,7 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist/mechatrek-bevy-web
-  
+
   deploy:
     needs: build
 
