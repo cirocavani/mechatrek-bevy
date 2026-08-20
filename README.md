@@ -38,13 +38,15 @@ make build
 make clean
 
 # Build a release and dist package: dist/mechatrek-bevy-<version>-linux-x86_64.tar.gz
-# (requires an x86_64 system or Docker with QEMU)
+# (requires a x86_64 system or Docker with QEMU)
 make release-x86_64 package-x86_64
 
 # Build a release and dist package: dist/mechatrek-bevy-<version>-linux-aarch64.tar.gz
 # (requires an aarch64 system or Docker with QEMU)
 make release-aarch64 package-aarch64
 ```
+
+For more datials on release procedure, see [`make_release.sh`](./development/make_release.sh).
 
 ### WebAssembly
 
