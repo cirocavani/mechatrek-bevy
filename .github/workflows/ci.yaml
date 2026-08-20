@@ -122,7 +122,6 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-            ~/.gradle/caches/
           key: cargo-ci-android-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             cargo-ci-android-
