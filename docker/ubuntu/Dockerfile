@@ -64,6 +64,7 @@ RUN curl --proto "=https" --tlsv1.2 -sSfL https://raw.githubusercontent.com/carg
 
 RUN cargo binstall -y \
     cargo-edit \
+    cargo-get \
     cargo-sort \
     cargo-update \
     zellij \

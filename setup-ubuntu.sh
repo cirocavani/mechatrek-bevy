@@ -41,6 +41,16 @@ echo
 curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | \
 bash
 
+# Cargo bin installs
+
+cargo binstall -y \
+    cargo-edit \
+    cargo-get \
+    cargo-sort \
+    cargo-update \
+    zellij \
+    nu
+
 
 echo
 echo "Install Compiler (clang / lld)"

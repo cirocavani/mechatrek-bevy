@@ -189,6 +189,17 @@ bash
 cargo binstall -V
 
 # 1.12.3
+
+
+# Cargo bin installs
+
+cargo binstall -y \
+    cargo-edit \
+    cargo-get \
+    cargo-sort \
+    cargo-update \
+    zellij \
+    nu
 ```
 
 
@@ -940,35 +951,61 @@ make android-emulator
 
 ### Docker
 
-```sh
-# Ubuntu 26.04 x86_64 (development)
+#### X86_64 Ubuntu 26.04 (development)
 
+```sh
 # Build Docker Image `mechatrek-bevy-ubuntu`
-make docker-build-ubuntu-amd64
+make build-docker-ubuntu-amd64
 
 # Execute `cargo run` in a container based on `mechatrek-bevy-ubuntu`
 # (open a window using Wayland)
-make docker-run-ubuntu-amd64
-make docker-run-ubuntu-amd64-nvidia
+make docker-ubuntu-amd64-run
+make docker-ubuntu-amd64-nvidia-run
 
 # Alias for build and run with ubuntu-amd64
 # (open a window using Wayland)
 make docker-ubuntu-amd64
 make docker-ubuntu-amd64-nvidia
+```
 
+#### Aarch64 Debian 13 (emulator)
 
-# Debian 13 ARM64 (emulator) - Raspberry Pi
+Target Raspberry Pi.
 
+```sh
 # Build Docker Image `mechatrek-bevy-debian`
-make docker-build-debian-arm64
+make build-docker-debian-arm64
 
 # Execute `cargo run` in a container based on `mechatrek-bevy-debian`
 # (open a window using Wayland)
-make docker-run-debian-arm64
+make docker-debian-arm64-run
 
 # Alias for build and run with debian-arm64
 # (open a window using Wayland)
 make docker-debian-arm64
+```
+
+#### WebAssemby (WASM)
+
+```sh
+# Build Docker Image `mechatrek-bevy-ubuntu`
+make build-docker-ubuntu-amd64
+
+# Build WASM binary at web folder
+make docker-build-web
+
+# Run HTTP server for web folder - http://127.0.0.1:8000
+make docker-serve-web
+```
+
+#### Android
+
+```sh
+# Build Docker Image `mechatrek-bevy-ubuntu`
+make build-docker-ubuntu-amd64
+
+# Build APK (android/app/build/outputs/apk/debug/app-debug.apk)
+make docker-build-android-apk
 ```
 
 

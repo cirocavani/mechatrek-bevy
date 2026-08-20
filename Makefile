@@ -1,7 +1,8 @@
 SHELL = /bin/bash
 
-
+#
 # Development
+#
 
 .PHONY: test
 test:
@@ -26,12 +27,38 @@ release-aarch64:
 	--target aarch64-unknown-linux-gnu \
 	--features log-max,wayland
 
+.PHONY: package-aarch64
+package-aarch64:
+	PKG_VERSION="$$(cargo get package.version)" && \
+	PKG_NAME="mechatrek-bevy-$${PKG_VERSION}-linux-aarch64" && \
+	PKG_DIR="dist/$${PKG_NAME}" && \
+	PKG_FILE="$${PKG_DIR}.tar.gz" && \
+	rm -rf "$${PKG_DIR}" && \
+	mkdir -p "$${PKG_DIR}" && \
+	cp target/aarch64-unknown-linux-gnu/release-lto/mechatrek-bevy "$${PKG_DIR}" && \
+	cp -r assets "$${PKG_DIR}" && \
+	tar czvf "$${PKG_FILE}" -C dist "$${PKG_NAME}" && \
+	rm -rf "$${PKG_DIR}"
+
 .PHONY: release-x86_64
 release-x86_64:
 	cargo build \
 	--profile release-lto \
 	--target x86_64-unknown-linux-gnu \
 	--features log-max,wayland
+
+.PHONY: package-x86_64
+package-x86_64:
+	PKG_VERSION="$$(cargo get package.version)" && \
+	PKG_NAME="mechatrek-bevy-$${PKG_VERSION}-linux-x86_64" && \
+	PKG_DIR="dist/$${PKG_NAME}" && \
+	PKG_FILE="$${PKG_DIR}.tar.gz" && \
+	rm -rf "$${PKG_DIR}" && \
+	mkdir -p "$${PKG_DIR}" && \
+	cp target/x86_64-unknown-linux-gnu/release-lto/mechatrek-bevy "$${PKG_DIR}" && \
+	cp -r assets "$${PKG_DIR}" && \
+	tar czvf "$${PKG_FILE}" -C dist "$${PKG_NAME}" && \
+	rm -rf "$${PKG_DIR}"
 
 .PHONY: run
 run:
@@ -46,119 +73,9 @@ upgrade:
 	cargo upgrade --compatible --verbose
 	cargo update --verbose
 
-
-# Docker (local)
-
-.PHONY: docker-build-ubuntu-amd64
-docker-build-ubuntu-amd64:
-	docker build \
-	--progress plain \
-	--platform linux/amd64 \
-	--build-arg USER_ID=`id -u` \
-	--build-arg GROUP_ID=`id -g` \
-	-t mechatrek-bevy-ubuntu:latest \
-	-f docker/ubuntu/Dockerfile \
-	.
-
-.PHONY: docker-run-ubuntu-amd64
-docker-run-ubuntu-amd64:
-	docker run --rm -it --platform linux/amd64 \
-	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
-	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
-	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
-	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
-	-v ${PWD}:/home/mechatrek/project \
-	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
-	mechatrek-bevy-ubuntu:latest \
-	make run
-
-.PHONY: docker-run-ubuntu-amd64-nvidia
-docker-run-ubuntu-amd64-nvidia:
-	docker run --rm -it --platform linux/amd64 \
-	--runtime nvidia \
-	--gpus all \
-	--device /dev/dri \
-	--group-add $(shell getent group video | cut -d ':' -f 3) \
-	--group-add $(shell getent group render | cut -d ':' -f 3) \
-	-e NVIDIA_DRIVER_CAPABILITIES=all \
-	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
-	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
-	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
-	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
-	-v ${PWD}:/home/mechatrek/project \
-	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
-	mechatrek-bevy-ubuntu:latest \
-	make run
-
-.PHONY: docker-ubuntu-amd64
-docker-ubuntu-amd64: docker-build-ubuntu-amd64 docker-run-ubuntu-amd64
-
-.PHONY: docker-ubuntu-amd64-nvidia
-docker-ubuntu-amd64-nvidia: docker-build-ubuntu-amd64 docker-run-ubuntu-amd64-nvidia
-
-
-.PHONY: docker-shell-ubuntu-amd64
-docker-shell-ubuntu-amd64:
-	docker run --rm -it --platform linux/amd64 \
-	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
-	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
-	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
-	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
-	-v ${PWD}:/home/mechatrek/project \
-	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
-	mechatrek-bevy-ubuntu:latest
-
-
-.PHONY: docker-build-debian-arm64
-docker-build-debian-arm64:
-	docker build \
-	--progress plain \
-	--platform linux/arm64 \
-	--build-arg USER_ID=`id -u` \
-	--build-arg GROUP_ID=`id -g` \
-	-t mechatrek-bevy-debian:latest \
-	-f docker/debian/Dockerfile \
-	.
-
-.PHONY: docker-run-debian-arm64
-docker-run-debian-arm64:
-	docker run --rm -it --platform linux/arm64 \
-	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
-	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
-	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
-	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/aarch64-unknown-linux-gnu \
-	-v ${PWD}:/home/mechatrek/project \
-	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
-	mechatrek-bevy-debian:latest \
-	make run
-
-.PHONY: docker-debian-arm64
-docker-debian-arm64: docker-build-debian-arm64 docker-run-debian-arm64
-
-
-.PHONY: docker-shell-debian-arm64
-docker-shell-debian-arm64:
-	docker run --rm -it --platform linux/arm64 \
-	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
-	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
-	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
-	-v /etc/machine-id:/etc/machine-id:ro \
-	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/aarch64-unknown-linux-gnu \
-	-v ${PWD}:/home/mechatrek/project \
-	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
-	mechatrek-bevy-debian:latest
-
-
+#
 # WebAssembly
+#
 
 .PHONY: build-wasm
 build-wasm:
@@ -175,6 +92,13 @@ build-web: build-wasm
 	--out-dir web/ \
 	--target web \
 	target/wasm32-unknown-unknown/wasm-release/mechatrek-bevy.wasm
+
+.PHONY: package-web
+package-web:
+	PKG_VERSION="$$(cargo get package.version)" && \
+	PKG_FILE="dist/mechatrek-bevy-$${PKG_VERSION}-web.zip" && \
+	cd web && \
+	zip -r "../$${PKG_FILE}" *
 
 .PHONY: serve-web
 serve-web:
@@ -202,25 +126,9 @@ open-web:
 	--auto-open-devtools-for-tabs \
 	--app=http://127.0.0.1:8000/
 
-.PHONY: docker-build-web
-docker-build-web:
-	docker run --rm -it --platform linux/amd64 \
-	-v ${PWD}:/home/mechatrek/project \
-	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
-	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
-	mechatrek-bevy-ubuntu:latest \
-	make build-web
-
-.PHONY: docker-serve-web
-docker-serve-web:
-	docker run --rm -it --platform linux/amd64 \
-	-v ${PWD}:/home/mechatrek/project \
-	-p 8000:8000 \
-	mechatrek-bevy-ubuntu:latest \
-	make serve-web
-
-
+#
 # Android
+#
 
 .PHONY: build-android-lib
 build-android-lib:
@@ -247,6 +155,12 @@ build-android-apk:
 	fi && \
 	cd android/ && \
 	./gradlew clean build --no-daemon --warning-mode all 
+
+.PHONY: package-apk
+package-apk:
+	PKG_VERSION="$$(cargo get package.version)" && \
+	PKG_FILE="dist/mechatrek-bevy-$${PKG_VERSION}.apk" && \
+	cp android/app/build/outputs/apk/debug/app-debug.apk "$${PKG_FILE}"
 
 .PHONY: install-apk-emulator
 install-apk-emulator:
@@ -285,6 +199,145 @@ android-device: build-android-lib build-android-apk install-apk-device
 
 .PHONY: android-emulator
 android-emulator: build-android-lib build-android-apk install-apk-emulator
+
+#
+# Docker (local) - Development Images
+#
+
+# Docker / Ubuntu X86_64
+
+.PHONY: build-docker-ubuntu-amd64
+build-docker-ubuntu-amd64:
+	docker build \
+	--progress plain \
+	--platform linux/amd64 \
+	--build-arg USER_ID=`id -u` \
+	--build-arg GROUP_ID=`id -g` \
+	-t mechatrek-bevy-ubuntu:latest \
+	-f docker/ubuntu/Dockerfile \
+	.
+
+.PHONY: docker-ubuntu-amd64-run
+docker-ubuntu-amd64-run:
+	docker run --rm -it --platform linux/amd64 \
+	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
+	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
+	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
+	-v /etc/machine-id:/etc/machine-id:ro \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
+	mechatrek-bevy-ubuntu:latest \
+	make run
+
+.PHONY: docker-ubuntu-amd64-nvidia-run
+docker-ubuntu-amd64-nvidia-run:
+	docker run --rm -it --platform linux/amd64 \
+	--runtime nvidia \
+	--gpus all \
+	--device /dev/dri \
+	--group-add $(shell getent group video | cut -d ':' -f 3) \
+	--group-add $(shell getent group render | cut -d ':' -f 3) \
+	-e NVIDIA_DRIVER_CAPABILITIES=all \
+	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
+	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
+	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
+	-v /etc/machine-id:/etc/machine-id:ro \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
+	mechatrek-bevy-ubuntu:latest \
+	make run
+
+.PHONY: docker-ubuntu-amd64
+docker-ubuntu-amd64: build-docker-ubuntu-amd64 docker-ubuntu-amd64-run
+
+.PHONY: docker-ubuntu-amd64-nvidia
+docker-ubuntu-amd64-nvidia: build-docker-ubuntu-amd64 docker-ubuntu-amd64-nvidia-run
+
+.PHONY: docker-ubuntu-amd64-shell
+docker-ubuntu-amd64-shell:
+	docker run --rm -it --platform linux/amd64 \
+	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
+	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
+	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
+	-v /etc/machine-id:/etc/machine-id:ro \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/x86_64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
+	mechatrek-bevy-ubuntu:latest
+
+
+# Docker / Debian Aarch64
+
+.PHONY: build-docker-debian-arm64
+build-docker-debian-arm64:
+	docker build \
+	--progress plain \
+	--platform linux/arm64 \
+	--build-arg USER_ID=`id -u` \
+	--build-arg GROUP_ID=`id -g` \
+	-t mechatrek-bevy-debian:latest \
+	-f docker/debian/Dockerfile \
+	.
+
+.PHONY: docker-debian-arm64-run
+docker-debian-arm64-run:
+	docker run --rm -it --platform linux/arm64 \
+	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
+	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
+	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
+	-v /etc/machine-id:/etc/machine-id:ro \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/aarch64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
+	mechatrek-bevy-debian:latest \
+	make run
+
+.PHONY: docker-debian-arm64
+docker-debian-arm64: build-docker-debian-arm64 docker-debian-arm64-run
+
+
+.PHONY: docker-debian-arm64-shell
+docker-debian-arm64-shell:
+	docker run --rm -it --platform linux/arm64 \
+	-e WAYLAND_DISPLAY=${WAYLAND_DISPLAY} \
+	-e XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} \
+	-v ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
+	-v /etc/machine-id:/etc/machine-id:ro \
+	-e CARGO_TARGET_DIR=/home/mechatrek/project/target/aarch64-unknown-linux-gnu \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
+	mechatrek-bevy-debian:latest
+
+
+# Docker / WebAssemply
+
+.PHONY: docker-build-web
+docker-build-web: IMAGE_NAME=mechatrek-bevy-ubuntu:latest
+docker-build-web:
+	docker run --rm -it \
+	-v ${PWD}:/home/mechatrek/project \
+	-v ${HOME}/.cargo/registry:/home/mechatrek/.cargo/registry \
+	-v ${HOME}/.cargo/git:/home/mechatrek/.cargo/git \
+	${IMAGE_NAME} \
+	make build-web
+
+.PHONY: docker-serve-web
+docker-serve-web: IMAGE_NAME=mechatrek-bevy-ubuntu:latest
+docker-serve-web:
+	docker run --rm -it \
+	-v ${PWD}:/home/mechatrek/project \
+	-p 8000:8000 \
+	${IMAGE_NAME} \
+	make serve-web
+
+# Docker / Android
 
 .PHONY: docker-build-android-apk
 docker-build-android-apk:

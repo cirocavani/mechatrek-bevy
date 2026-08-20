@@ -1,0 +1,204 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-26.04
+            arch: x86_64
+            build_image: mechatrek-bevy/mechatrek-bevy-ubuntu:latest
+          - os: ubuntu-26.04-arm
+            arch: aarch64
+            build_image: mechatrek-bevy/mechatrek-bevy-debian:latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          lfs: true
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Cargo Build
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: cargo-${{ matrix.arch }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ matrix.arch }}-
+
+      - name: Build Linux Binary
+        run: |
+          docker pull ${{ matrix.build_image }}
+
+          mkdir -p "$HOME/.cargo/registry"
+          mkdir -p "$HOME/.cargo/git"
+
+          docker run --rm \
+            -v "${{ github.workspace }}":/home/mechatrek/project \
+            -v "$HOME/.cargo/registry":/home/mechatrek/.cargo/registry \
+            -v "$HOME/.cargo/git":/home/mechatrek/.cargo/git \
+            ${{ matrix.build_image }} \
+            make release-${{ matrix.arch }} package-${{ matrix.arch }}
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: binary-linux-${{ matrix.arch }}
+          path: dist/mechatrek-bevy-*.tar.gz
+          retention-days: 1
+
+  build-wasm:
+    runs-on: ubuntu-26.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          lfs: true
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Cargo Build (WASM)
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: cargo-wasm32-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-wasm32-
+
+      - name: Build WASM Binary
+        run: |
+          docker pull mechatrek-bevy/mechatrek-bevy-ubuntu:latest
+
+          mkdir -p "$HOME/.cargo/registry"
+          mkdir -p "$HOME/.cargo/git"
+
+          docker run --rm \
+            -v "${{ github.workspace }}":/home/mechatrek/project \
+            -v "$HOME/.cargo/registry":/home/mechatrek/.cargo/registry \
+            -v "$HOME/.cargo/git":/home/mechatrek/.cargo/git \
+            mechatrek-bevy/mechatrek-bevy-ubuntu:latest \
+            make build-web package-web
+
+      - name: Upload WASM Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: binary-wasm
+          path: dist/mechatrek-bevy-*.zip
+          retention-days: 1
+
+  build-android:
+    runs-on: ubuntu-26.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          lfs: true
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Cargo Build (Android)
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: cargo-android-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-android-
+
+      - name: Cache Gradle Build (Android)
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.gradle/caches/
+          key: gradle-android-${{ hashFiles('**/libs.versions.toml') }}
+          restore-keys: |
+            gradle-android-
+
+      - name: Build Android Package
+        run: |
+          docker pull ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-ubuntu:latest
+
+          mkdir -p "$HOME/.cargo/registry"
+          mkdir -p "$HOME/.cargo/git"
+          mkdir -p "$HOME/.cargo/caches"
+
+          docker run --rm \
+            -v "${{ github.workspace }}":/home/mechatrek/project \
+            -v "$HOME/.cargo/registry":/home/mechatrek/.cargo/registry \
+            -v "$HOME/.cargo/git":/home/mechatrek/.cargo/git \
+            -v "$HOME/.gradle/caches":/home/mechatrek/.gradle/caches \
+            ghcr.io/cirocavani/mechatrek-bevy/mechatrek-bevy-ubuntu:latest \
+            make build-android-lib build-android-apk package-apk
+
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: binary-android
+          path: dist/mechatrek-bevy-*.apk
+          retention-days: 1
+
+  publish-release:
+    name: Create GitHub Release
+    needs: [build-linux, build-wasm, build-android]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          lsf: true
+
+      - name: Download all Build Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: release_assets/
+          pattern: binary-*
+          merge-multiple: true
+
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v3
+        with:
+          files: release_assets/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false

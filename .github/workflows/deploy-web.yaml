@@ -58,7 +58,7 @@ jobs:
 
           mkdir -p dist/
           rm -f dist/mechatrek-bevy-web.tar.gz
-          tar czhf dist/mechatrek-bevy-web.tar.gz -C web .
+          tar czhvf dist/mechatrek-bevy-web.tar.gz -C web .
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-artifact@v7
