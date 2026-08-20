@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # Project Setup
 # Ubuntu 26.04 Resolute (NVIDIA GPU)
-
 set -eu
+
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+cd ${PROJECT_DIR}
 
 
 echo

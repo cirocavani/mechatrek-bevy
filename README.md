@@ -30,11 +30,11 @@ Development Host:
 
 > WARNING: use setup script with caution
 
-[`setup-ubuntu.sh`](./setup-ubuntu.sh)
+[`setup-ubuntu.sh`](./development/setup-ubuntu.sh)
 
-[`setup-wasm.sh`](./setup-wasm.sh)
+[`setup-wasm.sh`](./development/setup-wasm.sh)
 
-[`setup-android.sh`](./setup-android.sh)
+[`setup-android.sh`](./development/setup-android.sh)
 
 
 ### Basic Utilities
