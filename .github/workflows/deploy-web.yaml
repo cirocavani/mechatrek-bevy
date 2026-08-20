@@ -67,6 +67,7 @@ jobs:
           path: dist/mechatrek-bevy-web.tar.gz
           retention-days: 1
           overwrite: true
+          archive: false
 
   deploy:
     needs: build
