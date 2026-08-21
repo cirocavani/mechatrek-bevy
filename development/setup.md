@@ -22,7 +22,7 @@ This document describes the installation of:
 8. [WebAssembly](#webassembly)
 9. [Android](#android)
 
-Other source of installation is the followin scripts:
+Another source of installation instruction is the following scripts:
 
 > WARNING: use setup script with caution
 
