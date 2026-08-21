@@ -1,5 +1,8 @@
 # The Book of the Machine - Mechatrek Bevy Project
 
+[![CI](https://github.com/cirocavani/mechatrek-bevy/actions/workflows/ci.yaml/badge.svg)](https://github.com/cirocavani/mechatrek-bevy/actions/workflows/ci.yaml)
+ [![GH Pages](https://github.com/cirocavani/mechatrek-bevy/actions/workflows/deploy-web.yaml/badge.svg)](https://github.com/cirocavani/mechatrek-bevy/actions/workflows/deploy-web.yaml)
+
 > Bevy is a refreshingly simple data-driven game engine built in Rust.
 
 <https://bevyengine.org/>
