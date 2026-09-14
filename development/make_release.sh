@@ -9,6 +9,8 @@ echo
 echo "Linux x86_64 binary release"
 echo
 
+make build-docker-ubuntu-amd64
+
 docker run --rm -it --platform linux/amd64 \
 -v $PWD:/home/mechatrek/project \
 -v $HOME/.cargo/registry:/home/mechatrek/.cargo/registry \
@@ -19,6 +21,8 @@ make release-x86_64 package-x86_64
 echo
 echo "Linux aarch64 binary release"
 echo
+
+make build-docker-debian-arm64
 
 docker run --rm -it --platform linux/arm64 \
 -v $PWD:/home/mechatrek/project \

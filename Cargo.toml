@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 bevy = "0.19.1"
-log = "0.4.33"
+log = "0.4.34"
 
 [features]
 wayland = ["bevy/wayland"]

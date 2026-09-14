@@ -76,7 +76,7 @@ RUN cargo binstall -y \
 RUN rustup target add wasm32-unknown-unknown
 
 RUN cargo binstall -y \
-    wasm-bindgen-cli@0.2.127 \
+    wasm-bindgen-cli@0.2.128 \
     simple-http-server
 
 
